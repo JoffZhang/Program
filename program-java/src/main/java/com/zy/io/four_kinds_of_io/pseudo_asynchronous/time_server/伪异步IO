@@ -1,0 +1,7 @@
+伪异步I/O
+简单优化BIO,无法从根本上解决同步I/O导致的通信线程阻塞问题。
+
+
+java I/O
+InputStream  read() / OutputStream  write()
+读流，写流，会被阻塞。
