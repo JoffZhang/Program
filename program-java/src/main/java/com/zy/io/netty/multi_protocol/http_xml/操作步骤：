@@ -1,0 +1,4 @@
+没找到原因。compile 不能执行。所以先maven的compile,在target下生成.class文件后。
+
+1 . 执行ant的 bindgen,生成映射文件
+2 . 执行ant的 bind，编译绑定脚本和动态修改Class ，在target下，生成 JiBX_开头的.class文件。

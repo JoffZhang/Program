@@ -1,0 +1,11 @@
+为了解决TCP粘包拆包导致的半包读写问题,Netty默认提供了额多种编解码器用于处理半包。
+
+LineBasedFrameDecoder和StringDecoder的原理分析：
+LineBasedFrameDecoder：依次遍历ByteBuf的可读字节，判断是否有‘\n','\r\n',如有，就以此位置为结束位置，从可读索引到结束位置
+区间的字节就组成了一行。
+它是以换行符为结束标志的解码器，支持携带结束符或者不携带结束符两种解码方式，同时支持配置单行的最大长度。如果连续读到最大长
+度后仍然没有换行符，就会抛出异常，同时忽略掉之前读取的异常码流。
+
+StringDecoder：将接收到的对象转成字符串，然后继续调用后面的handler。
+
+LineBasedFrameDecoder+StringDecoder组合就是按行切换的文本解码器。

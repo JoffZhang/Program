@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project default="main" basedir=".">
+<!--NETTY HTTP+XML JiBx的使用-->
+    <!--基目录-->
+    <dirname property="ant.file.dir" file="${ant.file}"/>
+    <dirname property="base.dir" file="${basedir}/../../../../../../../../../"/>
+
+    <!--classpath-->
+    <path id="classpath">
+        <dirset dir="${base.dir}/target/classes"/>
+        <dirset dir="${base.dir}/target/test-classes"/>
+        <fileset dir="E:/repo/org/jibx/jibx-bind/1.3.1/" includes="*.jar"/>
+        <fileset dir="E:/repo/org/jibx/jibx-run/1.3.1/" includes="*.jar"/>
+        <fileset dir="E:/repo/org/jibx/jibx-tools/1.3.1/" includes="*.jar"/>
+        <fileset dir="E:/repo/org/jibx/jibx-schema/1.3.1/" includes="*.jar"/>
+        <fileset dir="E:/repo/org/jibx/jibx-extras/1.3.1/" includes="*.jar"/>
+        <fileset dir="E:/repo/org/apache/bcel/bcel/6.0/" includes="*.jar"/>
+        <fileset dir="E:/repo/log4j/log4j/1.2.17/" includes="*.jar"/>
+        <fileset dir="E:/repo/com/thoughtworks/qdox/qdox/1.12.1/" includes="*.jar"/>
+        <fileset dir="E:/repo/xpp3/xpp3/1.1.3.4.O/" includes="*.jar"/>
+    </path>
+    <target name="main">
+        <echo message="${base.dir}"/>
+    </target>
+
+<!--    <target name="clean">
+        <delete quiet="true" dir="${base.dir}/target/classes/com"/>
+    </target>
+
+    <target name="compile" description="Compilation target" depends="clean">
+        <echo message="Compiling Java source code"/>
+        <mkdir dir="target/classes"/>
+        <javac srcdir="${base.dir}/src/main/java" destdir="${base.dir}/target/classes" debug="on" includeantruntime="true"/>
+    </target>-->
+    <!--使用BindGen命令生成绑定文件  执行成功，在当前工程目录下生成binding.xml 和 pojo.xsd文件-->
+    <target name="bindgen">
+        <echo message="Running BindGen tool"/>
+        <java classpathref="classpath" fork="true" failonerror="true"
+              classname="org.jibx.binding.generator.BindGen">
+            <arg value="-s"/>
+            <arg value="${base.dir}/pojo"/>
+            <arg value="com.zy.io.netty.multi_protocol.http_xml.jibx.pojo.Order"/>
+        </java>
+    </target>
+    <!--编译绑定脚本和动态修改Class的ANT脚本-->
+    <target name="bind">
+        <echo message="Running JiBX binding compiler"/>
+        <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+            <classpath refid="classpath"/>
+        </taskdef>
+        <bind binding="${base.dir}/src/main/java/com/zy/io/netty/multi_protocol/http_xml/jibx/binding.xml">
+            <classpath refid="classpath"/>
+        </bind>
+    </target>
+
+
+    <!-- make sure runtime jars are present -->
+    <target name="check-runtime">
+        <fail unless="jibx-home">JiBX home directory not found - define JIBX_HOME system property or set path directly in build.xml file.</fail>
+        <fail unless="runtime-jars-found">Required JiBX runtime jar jibx-run.jar was not found in JiBX home lib directory (${jibx-home}/lib)</fail>
+    </target>
+
+    <!-- make sure extras jars are present -->
+    <target name="check-extras" depends="check-runtime">
+        <fail unless="extras-jar-found">Required JiBX extras jar jibx-extras.jar was not found in JiBX home lib directory (${jibx-home}/lib)</fail>
+    </target>
+
+    <!-- make sure binding jars are present -->
+    <target name="check-binding" depends="check-runtime">
+        <fail unless="binding-jars-found">Required JiBX binding jar jibx-bind.jar or bcel.jar was not found in JiBX home lib directory (${jibx-home}/lib)</fail>
+    </target>
+</project>

@@ -1,0 +1,3 @@
+DelimiterBasedFrameDecoder:可自动完成以分隔符做结束标志的消息的解码
+FixedLengthFrameDecoder:可自动完成对定长消息的解码。
+
