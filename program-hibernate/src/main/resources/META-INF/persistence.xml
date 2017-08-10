@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <!--
+     Name属性用于定义持久化单元的名字 (name必选,空值也合法);
+     transaction-type 指定事务类型(可选)
+-->
+    <persistence-unit name="com.zy.hibernate.jpa" transaction-type="RESOURCE_LOCAL">
+        <description>
+            Persistence unit for the JPA tutorial of the Hibernate Getting Started Guide
+        </description>
+
+        <class>com.zy.hibernate.jpa.model.Event</class>
+
+        <!--   厂商专有属性(可选)   -->
+        <properties>
+
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+            <property name="hibernate.connection.url" value="jdbc:mysql://192.168.99.100:3306/hibernate?useUnicode=true&amp;characterEncoding=UTF-8" />
+            <property name="hibernate.connection.username" value="root" />
+            <property name="hibernate.connection.password" value="my-secret-pw" />
+
+
+            <!-- hibernate.hbm2ddl.auto= create-drop / create / update -->
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.show_sql" value="true" />
+
+        </properties>
+
+
+    </persistence-unit>
+</persistence>
