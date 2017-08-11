@@ -30,15 +30,17 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
+
             <!--Netty学习引入的JAR   start -->
             <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
             <dependency>
@@ -111,6 +113,29 @@
                 <artifactId>hibernate-envers</artifactId>
                 <version>${hibernate.version}</version>
             </dependency>
+
+            <!-- hibernaten内置日志记录所需包   https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+            <!--引入 slf4j-api api接口，引入slf4j-log4j 基于api接口的log4j兼容实现。-->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.25</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.6</version>
+            </dependency>
+
+
             <!--Hibernate学习引入的JAR   end -->
 
 

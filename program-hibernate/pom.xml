@@ -17,7 +17,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
         </dependency>
 
         <dependency>
@@ -73,10 +72,30 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
         </dependency>
+
+        <!-- hibernaten内置日志记录所需包   https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <!--供Hibernate使用的简单日志Facade-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!--引入 slf4j-api api接口，引入slf4j-log4j 基于api接口的log4j兼容实现。-->
+        <!--Hibernate使用的日志输出库-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
     </dependencies>
 
-    <build>
-        <!--如果配置文件写再src/main/java下，则配置为资源路径。以便读取配置-->
+  <build>
+        &lt;!&ndash;如果配置文件写再src/main/java下，则配置为资源路径。以便读取配置&ndash;&gt;
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -86,4 +105,41 @@
             </resource>
         </resources>
     </build>
+
+
+
+    <!--使用Hibernate3-maven-plugin自动生成数据库架构
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>hibernate3-maven-plugin</artifactId>
+        <version>2.1</version>
+        <executions>
+            <execution>
+                <phase>process-classes</phase>
+                <goals>
+                    <goal>hbm2ddl</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <components>
+                <component>
+                    <name>hbm2ddl</name>
+                    <implementation>annotationconfiguration</implementation>
+                </component>
+                <component>
+                    <name>hbmdoc</name>
+                </component>
+            </components>
+            <componentProperties>
+                <configurationfile>/target/classes/hibernate.cfg.xml</configurationfile>
+                <outputfilename>schema.ddl</outputfilename>
+                <namingstrategy>mycompany.myapp.IRDNamingStrategy</namingstrategy>
+                <drop>false</drop>
+                <create>true</create>
+                <export>false</export>
+                <format>true</format>
+            </componentProperties>
+        </configuration>
+    </plugin>-->
 </project>

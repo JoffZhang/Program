@@ -1,9 +1,14 @@
 package com.zy.hibernate.util;
 
+import com.zy.hibernate.naming_strategies.MyImplicitNamingStrategy;
+import com.zy.hibernate.naming_strategies.MyPhysicalNamingStategy;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataBuilder;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 
 /**
  * @Author : ZhangYun
@@ -12,6 +17,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  */
 public class HibernateUtil {
     private static final SessionFactory sessionFactory = buildSessionFactory();
+
     //相对于3.x.x版本hibernate，我们在4.x.x采用如下方式获取我们的会话工厂：
     //1. 解析我们在hibernate.cfg.xml中的配置
 //      Configuration configuration = new Configuration().configure();
@@ -33,5 +39,22 @@ public class HibernateUtil {
 
     public static SessionFactory getSessionFactory(){
         return sessionFactory;
+    }
+
+
+    private static final SessionFactory sessionFactoryWithConfig = buildSessionFactory2();
+
+    private static SessionFactory buildSessionFactory2() {
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().configure("com/zy/hibernate/hibernate.cfg.xml").build();
+        MetadataSources metadataSources = new MetadataSources(serviceRegistry);
+        MetadataBuilder builder = metadataSources.getMetadataBuilder();
+        builder.applyImplicitNamingStrategy(new MyImplicitNamingStrategy());
+        builder.applyPhysicalNamingStrategy(new MyPhysicalNamingStategy());
+        SessionFactory sessionFactory = metadataSources.buildMetadata().buildSessionFactory();
+                //= builder.build().buildSessionFactory();
+        return sessionFactory;
+    }
+    public static SessionFactory getSessionFactoryWithConfig(){
+        return sessionFactoryWithConfig;
     }
 }

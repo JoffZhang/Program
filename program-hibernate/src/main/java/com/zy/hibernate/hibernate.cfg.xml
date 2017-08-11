@@ -35,5 +35,8 @@
         <!-- 注册我们的实体映射类        两个只能最后一个生效，使用第一种方式会报错-->
         <mapping resource="com/zy/hibernate/hbm_xml/model/Event.hbm.xml"/>
         <mapping class="com.zy.hibernate.annotation.model.Event"/>
+
+        <mapping class="com.zy.hibernate.naming_strategies.model.TestTable1Bean"/>
+        <mapping class="com.zy.hibernate.naming_strategies.model.TestTable2Bean"/>
     </session-factory>
 </hibernate-configuration>
