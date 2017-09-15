@@ -26,17 +26,20 @@
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
         <!-- 在控制台输出sql语句 -->
-        <property name="show_sql">true</property>
+        <!--<property name="show_sql">true</property>-->
+        <property name="format_sql">true</property>
         <!-- 在启动时根据配置更新数据库 -->
         <property name="hbm2ddl.auto">update</property>
 
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
 
         <!-- 注册我们的实体映射类        两个只能最后一个生效，使用第一种方式会报错-->
-        <mapping resource="com/zy/hibernate/hbm_xml/model/Event.hbm.xml"/>
+<!--        <mapping resource="com/zy/hibernate/hbm_xml/model/Event.hbm.xml"/>
         <mapping class="com.zy.hibernate.annotation.model.Event"/>
 
         <mapping class="com.zy.hibernate.naming_strategies.model.TestTable1Bean"/>
-        <mapping class="com.zy.hibernate.naming_strategies.model.TestTable2Bean"/>
+        <mapping class="com.zy.hibernate.naming_strategies.model.TestTable2Bean"/>-->
+
+        <mapping class="com.zy.hibernate.annotation.model.generated.Person"/>
     </session-factory>
 </hibernate-configuration>

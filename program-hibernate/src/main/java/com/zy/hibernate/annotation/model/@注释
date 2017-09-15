@@ -1,0 +1,213 @@
+@Basic
+    :注释可被忽略，默认情况下，所有属性都用 @Basic 注解
+
+两个属性：
+optional - 默认true, 是否可以为空；  fetch  - 默认渴望，是否应该获取热切或延迟。
+
+
+@Column
+    ：注解将属性映射到列。
+   @Column  默认属性名和表的列名相同。
+   @Column(name="xxx") 明确指定对应的列名。
+@Column(
+   name="columnName"; (1) 列名
+   boolean unique() default false; (2)    是否在该列上设置唯一约束
+   boolean nullable() default true; (3)   列可空？
+   boolean insertable() default true; (4) 该列是否作为生成 insert语句的一个列
+   boolean updatable() default true; (5)  该列是否作为生成 update语句的一个列
+   String columnDefinition() default ""; (6)  默认值
+   String table() default ""; (7)             定义对应的表（deault 是主表）
+   int length() default 255; (8)              列长度
+   int precision() default 0; // decimal precision (9)  decimal精度
+   int scale() default 0; // decimal scale        (10)  decimal长度
+
+@Transient
+    ：   不需要持久化到数据库
+
+@Enumerated
+    :   枚举作为基本类型的映射
+映射枚举通过jpa方法 @Enumerated和@MapKeyEnumerated映射注释，根据存储的枚举值策略之一表示javax.persistence.EnumType:
+        ORDINAL ：根据枚举值的顺序存储位置在ENUM类，如  java.long.Enum#ordinal
+        STRING  ：根据枚举值存储的名字，如   java.long.Enum#name
+    AttributeConverter 实现存储enum的值
+        JPA不允许适用AttributeConverter属性标记为@Enumerated   如果使用AttributeConverter方法，一定不要标记属性@Enumerated
+    自定义类型  可以使用Hibernate映射枚举定制类型映射。使用一个自定义类型存储更多标准化的代码
+
+@Lob
+    jdbc LOB定位器类型：java.sql.Blob java.sql.Clob java.sql.NClob
+    映射java类型String ,char[] ,byte[] 等等
+
+映射国有化字符数据
+    NCHAR
+    NVARCHAR
+    LONGNVARCHAR
+    NCLOB
+
+AttributeConverters 定制一个转换器，可将给定的JDBC类型映射到一个实体的基本类型
+
+@Generated
+    :   使用hibernate可以获取当前注释属性尸体保存或更新后。
+    接收一个GenerationTime枚举值   NEVER INSERT 在插入时属性生成 ALWAYS生成属性值对插入和更新
+
+#########################主键生成策略
+1、identity：用于MySQL数据库。特点：递增
+    注：对于mysql数据库使用递增序列时需要在建表时对主键指定为auto_increment属性。
+2、sequence：用于Oracle数据库
+3.native：跨数据库时使用，由底层方言产生。
+    Default.sequence为hibernate_sequence
+    注：使用native时Hibernate默认会去查找oracle中的hibernate_sequence序列。
+    如果Oracle中没有该序列，连Oracle数据库时会报错。
+4、hilo：通过高低位合成id，先建表hi_value，再建列next_value。必须要有初始值。
+5、sequencehilo：同过高低位合成id，建一个sequence序列，不用建表。
+6、assigned：用户自定义id;
+7、foreign：用于一对一关系共享主健时，两id值一样。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+注释说明：
+ * @Entity —— 将一个类声明为一个实体bean(即一个持久化POJO类)
+ * @Id —— 注解声明了该实体bean的标识属性（对应表中的主键）。
+ * @Table —— 注解声明了该实体bean映射指定的表（table）,目录（catalog）和schema的名字
+ * @Column —— 注解声明了属性到列的映射。该注解有如下的属性
+ *  name  可选，列名（默认值是属性名）
+ *  unique 可选，是否在该列上设置唯一约束（默认值false）
+ *  nullable 可选，是否设置该列的值可以为空（默认值false）
+ *  insertable 可选，该列是否作为生成的insert语句中的一个列（默认值true）
+ *  updatable 可选，该列是否作为生成的update语句中的一个列（默认值true）
+ *  columnDefinition 可选，为这个特定列覆盖sql ddl片段（这可能导致无法在不同数据库间移植）
+ *  table 可选，定义对应的表（默认为主表）
+ *  length 可选，列长度（默认值255）
+ *  precision 可选，列十进制精度（decimal precision)(默认值0）
+ *  scale 可选，如果列十进制数值范围（decimal scale）可用，在此设置（默认值0）
+ * @GeneratedValue —— 注解声明了主键的生成策略。该注解有如下属性
+ *  strategy 指定生成的策略（JPA定义的），这是一个GenerationType。默认是GenerationType. AUTO
+ *   GenerationType.AUTO 主键由程序控制
+ *   GenerationType.TABLE 使用一个特定的数据库表格来保存主键
+ *   GenerationType.IDENTITY 主键由数据库自动生成（主要是自动增长类型）
+ *   GenerationType.SEQUENCE 根据底层数据库的序列来生成主键，条件是数据库支持序列。（这个值要与generator一起使用）
+ *  generator 指定生成主键使用的生成器（可能是orcale中的序列）。
+ * @SequenceGenerator —— 注解声明了一个数据库序列。该注解有如下属性
+ *  name 表示该表主键生成策略名称，它被引用在@GeneratedValue中设置的“gernerator”值中
+ *  sequenceName 表示生成策略用到的数据库序列名称。
+ *  initialValue 表示主键初始值，默认为0.
+ *  allocationSize 每次主键值增加的大小，例如设置成1，则表示每次创建新记录后自动加1，默认为50.
+ * @GenericGenerator —— 注解声明了一个hibernate的主键生成策略。支持十三种策略。该注解有如下属性
+ *  name 指定生成器名称
+ *  strategy 指定具体生成器的类名（指定生成策略）。
+ *  parameters 得到strategy指定的具体生成器所用到的参数。
+ *    其十三种策略（strategy属性的值）如下：
+ *   1.native 对于orcale采用Sequence方式，对于MySQL和SQL Server采用identity(处境主键生成机制)，
+ *     native就是将主键的生成工作将由数据库完成，hibernate不管（很常用）
+ *     例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "native")
+ *      2.uuid 采用128位的uuid算法生成主键，uuid被编码为一个32位16进制数字的字符串。占用空间大（字符串类型）。
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+ *      3.hilo 要在数据库中建立一张额外的表，默认表名为hibernate_unque_key，默认字段为integer类型，名称是next_hi（比较少用）
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "hilo")
+ *      4.assigned 在插入数据的时候主键由程序处理（很常用），这是<generator>元素没有指定时的默认生成策略。等同于JPA中的AUTO。
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
+ *      5.identity 使用SQL Server和MySQL的自增字段，这个方法不能放到Oracle中，Oracle不支持自增字段，要设定sequence(MySQL和SQL Server中很常用)。等同于JPA中的IDENTITY
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "identity")
+ *      6.select 使用触发器生成主键（主要用于早期的数据库主键生成机制，少用）
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "select")
+ *      7.sequence 调用谨慎数据库的序列来生成主键，要设定序列名，不然hibernate无法找到。
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *   @GenericGenerator(name = "paymentableGenerator", strategy = "sequence",
+ *    parameters = { @Parameter(name = "sequence", value = "seq_payablemoney") })
+ *  8.seqhilo 通过hilo算法实现，但是主键历史保存在Sequence中，适用于支持Sequence的数据库，如Orcale(比较少用）
+ *  例：@GeneratedValue(generator = "paymentableGenerator")
+ *    @GenericGenerator(name = "paymentableGenerator", strategy = "seqhilo",
+ *    parameters = { @Parameter(name = "max_lo", value = "5") })
+ *  9.increnment 插入数据的时候hibernate会给主键添加一个自增的主键，但是一个hibernate实例就维护一个计数器，所以在多个实例运行的时候不能使用这个方法。
+ *   例：@GeneratedValue(generator = "paymentableGenerator")
+ *          @GenericGenerator(name = "paymentableGenerator", strategy = "increnment")
+ *      10.foreign 使用另一个相关的对象的主键。通常和<one-to-one>联合起来使用。
+ *      例：@Id
+ *    @GeneratedValue(generator = "idGenerator")
+ *    @GenericGenerator(name = "idGenerator", strategy = "foreign",
+ *         parameters = { @Parameter(name = "property", value = "info") })
+ *    Integer id;
+ *   @OneToOne
+ *   EmployeeInfo info;
+ *  11.guid 采用数据库底层的guid算法机制，对应MySQL的uuid()函数，SQL Server的newid()函数，ORCALE的rawtohex(sys_guid())函数等
+ *  例：@GeneratedValue(generator = "paymentableGenerator")
+ *    @GenericGenerator(name = "paymentableGenerator", strategy = "guid")
+ *  12.uuid.hex 看uudi,建议用uuid替换
+ *    例：@GeneratedValue(generator = "paymentableGenerator")
+ *    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid.hex")
+ *  13.sequence-identity sequence策略的扩展，采用立即检索策略来获取sequence值，需要JDBC3.0和JDK4以上（含1.4）版本
+ *       例：@GeneratedValue(generator = "paymentableGenerator")
+ *   @GenericGenerator(name = "paymentableGenerator", strategy = "sequence-identity",
+ *         parameters = { @Parameter(name = "sequence", value = "seq_payablemoney") })
+ *
+ * @OneToOne 设置一对一个关联。cascade属性有五个值(只有CascadeType.ALL好用？很奇怪)，分别是CascadeType.PERSIST(级联新建)，CascadeType.REMOVE（级联删除），CascadeType.REFRESH（级联刷新），CascadeType.MERGE（级联更新），CascadeType.ALL（全部四项）
+ *    方法一
+ *     主表： ?@OneToOne(cascade = CascadeType.ALL)
+ *      @PrimaryKeyJoinColumn
+ *      public 从表类 get从表类(){return 从表对象}
+ *      从表：没有主表类。
+ *      注意：这种方法要求主表与从表的主键值想对应。
+ *   方法二
+ *      主表：?@OneToOne(cascade = CascadeType.ALL)
+ *          @JoinColumn(name="主表外键") //这里指定的是数据库中的外键字段。
+ *          public 从表类 get从表类(){return 从表类}
+ *      从表：@OneToOne(mappedBy = "主表类中的从表属性")//例主表User中有一个从表属性是Heart类型的heart，这里就填heart
+ *          public 主表类 get主表类(){return 主表对象}
+ *      注意：@JoinColumn是可选的。默认值是从表变量名+"_"+从表的主键（注意，这里加的是主键。而不是主键对应的变量）。
+ * 方法三
+ *      主表：@OneToOne(cascade=CascadeType.ALL)
+ *          @JoinTable( name="关联表名",
+ *    joinColumns = @JoinColumn(name="主表外键"),
+ *    inverseJoinColumns = @JoinColumns(name="从表外键")
+ *          )
+ *      从表：@OneToOne(mappedBy = "主表类中的从表属性")//例主表User中有一个从表属性是Heart类型的heart，这里就填heart
+ *          public 主表类 get主表类(){return 主表对象}
+ *  @ManyToOne 设置多对一关联
+ *    方法一
+ *    @ManyToOne(cascade={CasCadeType.PERSIST,CascadeType.MERGE})
+ *    @JoinColumn(name="外键")
+ *    public 主表类 get主表类(){return 主表对象}
+ *    方法二
+ *    @ManyToOne(cascade={CascadeType.PERSIST,CascadeType.MERGE})
+ *    @JoinTable(name="关联表名"，
+ *     joinColumns = @JoinColumn(name="主表外键"),
+ *     inverseJoinColumns = @JoinColumns(name="从表外键")
+ *    )
+ *  @OneToMany 设置一对多关联。cascade属性指定关联级别,参考@OneToOne中的说明。fetch指定是否延迟加载，值为FetchType.LAZY表示延迟，为FetchType.EAGER表示立即加载
+ *    方法一     使用这种配置，在为“一端”添加“多端”时，不会修改“多端”的外键。在“一端”加载时，不会得到“多端”。如果使用延迟加载，在读“多端”列表时会出异常，立即加载在得到多端时，是一个空集合（集合元素为0）。
+ *    “一端”配置
+ *    @OneToMany(mappedBy="“多端”的属性")
+ *    public List<“多端”类> get“多端”列表(){return “多端”列表}
+ *    “多端”配置参考@ManyToOne.
+ *    方法二
+ *    “一端”配置
+ *    @OneToMany(mappedBy="“多端”的属性")
+ *    @MapKey(name="“多端”做为Key的属性")
+ *    public Map<“多端”做为Key的属性的类,主表类> get“多端”列表（）{return “多端”列表}
+ *    “多端”配置参考@ManyToOne.
+ *    方法三 使用这种配置，在为“一端”添加“多端”时，可以修改“多端”的外键。
+ *    “一端”配置
+ *    @OneToMany
+ *    @JoinColumn(name="“多端”外键")
+ *    public List<“多端”类> get“多端”列表(){return “多端”列表}
+ *    “多端”配置参考@ManyToOne.
+ *
